@@ -1,7 +1,6 @@
 import React from 'react';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
-import { useTheme } from '../context/ThemeContext';
 
 interface SidebarProps {
   activeMenu: MenuId | null;
@@ -13,7 +12,6 @@ const IconSidebar: React.FC<SidebarProps> = ({
   setActiveMenu,
 }) => {
   const { isPinned, setIsPinned, setContentSidebarVisibility, isContentSidebarVisible } = useSidebarStore();
-  const { theme } = useTheme();
 
   const handlePin = (id: MenuId) => {
     if (activeMenu === id && isPinned) {

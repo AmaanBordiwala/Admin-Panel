@@ -1,7 +1,6 @@
 'use client';
 
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { useSidebarStore } from '../lib/store';
 
 interface AuthContextType {

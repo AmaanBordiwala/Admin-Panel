@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
 import React, { forwardRef } from 'react';
-import { useTheme } from '../context/ThemeContext';
 
 interface ContentSidebarProps {
   activeMenu: MenuId | null;
@@ -18,7 +17,6 @@ const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((
 ) => {
   const pathname = usePathname();
   const { isContentSidebarVisible, setContentSidebarVisibility, setIsPinned } = useSidebarStore();
-  const { theme } = useTheme();
   const content = activeMenu ? menuConfig[activeMenu] : null;
 
   const handleClose = () => {
