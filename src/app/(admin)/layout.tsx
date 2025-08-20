@@ -30,6 +30,7 @@ export default function AdminLayout({
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+  
 
 const handleMouseLeave = (event: React.MouseEvent) => {
   const target = event.relatedTarget;
