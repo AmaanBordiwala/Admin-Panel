@@ -13,7 +13,7 @@ export default async function NotFound() {
         <h1 className="text-8xl md:text-9xl font-extrabold text-primary mb-4 animate-bounce-slow">404</h1>
         <p className="text-2xl md:text-3xl font-semibold mb-4">Oops! Page Not Found</p>
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-          It looks like you've stumbled upon a page that doesn't exist.
+        It looks like you&apos;ve stumbled upon a page that doesn&apos;t exist.
         </p>
         <Link href={isAuthenticated ? '/dashboard' : '/login'}>
           <button className="inline-flex items-center cursor-pointer px-8 py-4 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200">

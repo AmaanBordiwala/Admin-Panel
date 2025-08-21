@@ -52,7 +52,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                     className={`block px-3 py-2 my-1 rounded-md transition-colors duration-150
                       ${pathname === link.href
                         ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-muted'}
+                        : 'hover:bg-primary/10'}
                     `}
                   >
                     {link.label}
