@@ -19,8 +19,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [activeMenu, setActiveMenu] = useState<MenuId | null>(null);
-  const { isContentSidebarVisible, isPinned, setContentSidebarVisibility } = useSidebarStore();
+  const [hoveredMenuEl, setHoveredMenuEl] = useState<HTMLDivElement | null>(null);
+
+  const {
+    isContentSidebarVisible,
+    isPinned,
+    setContentSidebarVisibility,
+  } = useSidebarStore();
+
   const contentSidebarRef = useRef<HTMLDivElement>(null);
+  const iconSidebarRef = useRef<HTMLDivElement>(null);
+
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -30,21 +39,23 @@ export default function AdminLayout({
       router.push('/login');
     }
   }, [isAuthenticated, router]);
-  
 
-const handleMouseLeave = (event: React.MouseEvent) => {
-  const target = event.relatedTarget;
+  const handleMouseLeave = (event: React.MouseEvent) => {
+    const target = event.relatedTarget;
 
-  if (
-    !isPinned &&
-    contentSidebarRef.current &&
-    target instanceof Node &&
-    !contentSidebarRef.current.contains(target)
-  ) {
-    setActiveMenu(null);
-    setContentSidebarVisibility(false);
-  }
-};
+    if (
+      !isPinned &&
+      contentSidebarRef.current &&
+      iconSidebarRef.current &&
+      target instanceof Node &&
+      !contentSidebarRef.current.contains(target) &&
+      !iconSidebarRef.current.contains(target)
+    ) {
+      setActiveMenu(null);
+      setContentSidebarVisibility(false);
+      setHoveredMenuEl(null);
+    }
+  };
 
   let currentTitle = 'Dashboard';
   for (const menuKey in menuConfig) {
@@ -60,32 +71,36 @@ const handleMouseLeave = (event: React.MouseEvent) => {
     }
   }
 
-  const mainContentMargin =
-    isContentSidebarVisible && isPinned ? 'ml-[336px]' : 'ml-20';
+  const sidebarStyle = {
+    top: hoveredMenuEl?.offsetTop ?? 0,
+    height: hoveredMenuEl?.offsetHeight ?? 'auto',
+  };
 
   return (
+    <div className={`${inter.className} flex h-screen`}>
+      <div
+        className="flex fixed top-0 left-0 h-full z-10"
+        onMouseLeave={handleMouseLeave}
+      >
+        <IconSidebar
+          ref={iconSidebarRef}
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          setHoveredElement={setHoveredMenuEl}
+        />
 
-        <div className={`${inter.className} flex h-screen`}>
-          <div
-            className="flex fixed top-0 left-0 h-full z-10"
-            onMouseLeave={handleMouseLeave}
-          >
-            <IconSidebar
-              activeMenu={activeMenu}
-              setActiveMenu={setActiveMenu}
-            />
+        <ContentSidebar
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          ref={contentSidebarRef}
+          style={sidebarStyle}
+        />
+      </div>
 
-            <ContentSidebar
-              activeMenu={activeMenu}
-              setActiveMenu={setActiveMenu}
-              ref={contentSidebarRef}
-            />
-          </div>
-
-          <main className={`flex-1 transition-all duration-300 ${mainContentMargin}`}>
-            <Header title={currentTitle} />
-            <div className="p-4">{children}</div>
-          </main>
-        </div>
+      <main className={`flex-1 transition-all duration-300 ml-20`}>
+        <Header title={currentTitle} />
+        <div className="p-4">{children}</div>
+      </main>
+    </div>
   );
 }

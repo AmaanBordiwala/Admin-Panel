@@ -1,60 +1,55 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
-import React, { forwardRef } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 interface ContentSidebarProps {
   activeMenu: MenuId | null;
   setActiveMenu: (value: MenuId | null) => void;
+  style?: React.CSSProperties;
 }
 
-const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((
-  { activeMenu, setActiveMenu },
-  ref
-) => {
-  const pathname = usePathname();
-  const { isContentSidebarVisible, setContentSidebarVisibility, setIsPinned } = useSidebarStore();
-  const content = activeMenu ? menuConfig[activeMenu] : null;
+const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
+  ({ activeMenu, style }, ref) => {
+    const { isContentSidebarVisible } = useSidebarStore();
+    const pathname = usePathname();
+    const content = activeMenu ? menuConfig[activeMenu] : null;
 
-  const handleClose = () => {
-    setContentSidebarVisibility(false);
-    setIsPinned(false);
-    setActiveMenu(null);
-  };
+    const [menuHeight, setMenuHeight] = useState<number>(0);
 
-  return (
-    <aside
-      ref={ref}
-      className={`
-        w-64 bg-sidebar text-sidebar-foreground border-l border-sidebar-border h-full shadow-md flex flex-col
-        transition-all duration-500 ease-out
-        ${isContentSidebarVisible ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
-      `}
-    >
-      {content && (
-        <>
-          <div className="h-16 p-4 flex items-center justify-between border-b border-sidebar-border">
-            <h2 className="text-xl font-bold text-sidebar-foreground">{content.label}</h2>
-            <button
-              onClick={handleClose}
-              className="p-1 rounded-full hover:bg-muted text-muted-foreground"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+    useEffect(() => {
+      // compute height dynamically based on number of links
+      if (content) {
+        const height = content.links.length * 50;
+        setMenuHeight(height);
+      }
+    }, [content]);
 
-          <nav className="p-4">
+    if (!isContentSidebarVisible || !activeMenu) return null;
+
+    return (
+      <div
+        ref={ref}
+        style={{
+          ...style,
+          minHeight: style?.height ?? 60, // ensure at least icon height
+          height: Math.max(menuHeight, Number(style?.height) ?? 60), // fit content
+          minWidth: 200,
+          padding: '8px',
+        }}
+        className="fixed left-[82px] rounded-md shadow-lg bg-sidebar  transition-all duration-200 overflow-hidden"
+      >
+        {content && (
+          <nav>
             <ul>
               {content.links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block p-2 rounded-md transition-colors duration-150
+                    className={`block px-3 py-2 my-1 rounded-md transition-colors duration-150
                       ${pathname === link.href
                         ? 'bg-primary text-primary-foreground'
                         : 'hover:bg-muted'}
@@ -66,11 +61,11 @@ const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((
               ))}
             </ul>
           </nav>
-        </>
-      )}
-    </aside>
-  );
-});
+        )}
+      </div>
+    );
+  }
+);
 
 ContentSidebar.displayName = 'ContentSidebar';
 
