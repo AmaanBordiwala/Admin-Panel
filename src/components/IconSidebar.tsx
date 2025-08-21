@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
 
@@ -12,6 +13,7 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ activeMenu, setActiveMenu, setHoveredElement }, ref) => {
     const {
       isPinned,
+      // setIsPinned,
       setContentSidebarVisibility,
       isContentSidebarVisible,
     } = useSidebarStore();
@@ -36,25 +38,26 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       >
         <nav className="flex-1 flex flex-col justify-center">
           {Object.entries(menuConfig).map(([id, item]) => (
-            <div
-              key={id}
-              onMouseEnter={(e) => {
-                if (!isPinned) {
-                  setActiveMenu(id as MenuId);
-                  setContentSidebarVisibility(true);
-                  setHoveredElement(e.currentTarget);
-                }
-              }}
-              // onClick={() => handlePin(id as MenuId)}
-              className={`
-                  p-4 my-2 rounded-lg cursor-pointer transition-colors duration-200
-                  ${activeMenu === id && (isContentSidebarVisible || isPinned)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-muted'}
-                `}
-            >
-              {item.icon}
-            </div>
+            <Link href={item.parenthref || '#'} key={id}>
+              <div
+                onMouseEnter={(e) => {
+                  if (!isPinned) {
+                    setActiveMenu(id as MenuId);
+                    setContentSidebarVisibility(true);
+                    setHoveredElement(e.currentTarget);
+                  }
+                }}
+                // onClick={() => handlePin(id as MenuId)}
+                className={`
+                    p-4 my-2 rounded-lg cursor-pointer transition-colors duration-200
+                    ${activeMenu === id && (isContentSidebarVisible || isPinned)
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-muted'}
+                  `}
+              >
+                {item.icon}
+              </div>
+            </Link>
           ))}
         </nav>
       </aside>
@@ -65,3 +68,4 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 IconSidebar.displayName = 'IconSidebar';
 
 export default IconSidebar;
+

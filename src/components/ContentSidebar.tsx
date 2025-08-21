@@ -23,7 +23,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
     useEffect(() => {
       // compute height dynamically based on number of links
       if (content) {
-        const height = content.links.length * 50;
+        const height = content.links.length * 53;
         setMenuHeight(height);
       }
     }, [content]);
@@ -35,8 +35,8 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
         ref={ref}
         style={{
           ...style,
-          minHeight: style?.height ?? 60, // ensure at least icon height
-          height: Math.max(menuHeight, Number(style?.height) ?? 60), // fit content
+          minHeight: style?.height ?? 50, // ensure at least icon height
+          height: Math.max(menuHeight, Number(style?.height) ?? 50), // fit content
           minWidth: 200,
           padding: '8px',
         }}

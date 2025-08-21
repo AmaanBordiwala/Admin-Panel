@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import IconSidebar from '@/components/IconSidebar';
-import ContentSidebar from '@/components/ContentSidebar';
-import Header from '@/components/Header';
-import { Inter } from 'next/font/google';
-import { menuConfig, MenuId } from '../../types/menuConfig';
-import '../globals.css';
-import { useSidebarStore } from '@/lib/store';
-import FullScreenLoader from '@/components/FullScreenLoader'; // Import the new loader component
+import { useState, useRef, useEffect } from "react";
+import IconSidebar from "@/components/IconSidebar";
+import ContentSidebar from "@/components/ContentSidebar";
+import Header from "@/components/Header";
+import { Inter } from "next/font/google";
+import { MenuId } from "../../types/menuConfig";
+import "../globals.css";
+import { useSidebarStore } from "@/lib/store";
+import FullScreenLoader from "@/components/FullScreenLoader";
 
-import { useRouter, usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react'; // Import useSession
+import { useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { getBreadcrumbs } from "../../../utils/getBreadcrumbs";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export default function AdminLayout({
   children,
@@ -21,12 +22,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [activeMenu, setActiveMenu] = useState<MenuId | null>(null);
-  const [hoveredMenuEl, setHoveredMenuEl] = useState<HTMLDivElement | null>(null);
-
-  const {
-    isPinned,
-    setContentSidebarVisibility,
-  } = useSidebarStore();
+  const [hoveredMenuEl, setHoveredMenuEl] = useState<HTMLDivElement | null>(
+    null
+  );
+  const [currentTitle, setCurrentTitle] = useState("Dashboard");
+  const { isPinned, setContentSidebarVisibility } = useSidebarStore();
 
   const contentSidebarRef = useRef<HTMLDivElement>(null);
   const iconSidebarRef = useRef<HTMLDivElement>(null);
@@ -35,14 +35,20 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+    useEffect(() => {
+    const breadcrumbs = getBreadcrumbs(pathname);
+    setCurrentTitle(breadcrumbs.join(" / "));
+  }, [pathname]);
+  
   useEffect(() => {
-    if (status === "unauthenticated") { // Check for unauthenticated status
-      router.replace('/login');
+    if (status === "unauthenticated") {
+      // Check for unauthenticated status
+      router.replace("/login");
     }
   }, [status, router]); // Depend on status
 
   // Add conditional rendering here
- if (status === 'loading' || status === 'unauthenticated') {
+  if (status === "loading" || status === "unauthenticated") {
     return <FullScreenLoader />;
   }
 
@@ -63,23 +69,9 @@ export default function AdminLayout({
     }
   };
 
-  let currentTitle = 'Dashboard';
-  for (const menuKey in menuConfig) {
-    const menu = menuConfig[menuKey as MenuId];
-    if (pathname.startsWith(`/${menuKey}`)) {
-      const matchedLink = menu.links.find(link => link.href === pathname);
-      if (matchedLink) {
-        currentTitle = matchedLink.label;
-        break;
-      } else if (pathname === `/${menuKey}` || pathname.startsWith(`/${menuKey}/`)) {
-        currentTitle = menu.label;
-      }
-    }
-  }
-
   const sidebarStyle = {
     top: hoveredMenuEl?.offsetTop ?? 0,
-    height: hoveredMenuEl?.offsetHeight ?? 'auto',
+    height: hoveredMenuEl?.offsetHeight ?? "auto",
   };
 
   return (

@@ -8,7 +8,7 @@ export default async function NotFound() {
   const isAuthenticated = !!session;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-black dark:to-sidebar text-gray-900 dark:text-gray-100 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary/50 to-priamry/10 text-gray-900 dark:text-gray-100 p-4">
       <div className="bg-white dark:bg-sidebar rounded-lg shadow-xl p-8 md:p-12 text-center max-w-lg w-full transform transition-all duration-300 hover:scale-105">
         <h1 className="text-8xl md:text-9xl font-extrabold text-primary mb-4 animate-bounce-slow">404</h1>
         <p className="text-2xl md:text-3xl font-semibold mb-4">Oops! Page Not Found</p>

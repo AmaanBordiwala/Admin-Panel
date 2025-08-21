@@ -4,6 +4,7 @@ import React from "react";
 export type MenuItem = {
   label: string;
   icon: React.ReactNode;
+  parenthref?: string;
   links: { href: string; label: string }[];
 };
 
@@ -25,8 +26,9 @@ export const menuConfig: Record<string, MenuItem> = {
         />
       </svg>
     ),
+    parenthref: "/dashboard",
     links: [
-      { href: "/dashboard", label: "Overview" },
+      { href: "/dashboard/overview", label: "Overview" },
       { href: "/dashboard/tasks", label: "Tasks" },
       { href: "/dashboard/projects", label: "Projects" },
     ],
@@ -48,8 +50,9 @@ export const menuConfig: Record<string, MenuItem> = {
         />
       </svg>
     ),
+    parenthref: "/analytics",
     links: [
-      { href: "/analytics", label: "Analytics View" },
+      { href: "/analytics/view", label: "View" },
       { href: "/analytics/users", label: "Users" },
       { href: "/analytics/revenue", label: "Revenue" },
     ],
@@ -77,8 +80,9 @@ export const menuConfig: Record<string, MenuItem> = {
         />
       </svg>
     ),
+    parenthref: "/settings",
     links: [
-      { href: "/settings", label: "Profile" },
+      { href: "/settings/profile", label: "Profile" },
       { href: "/settings/billing", label: "Billing" },
       { href: "/settings/team", label: "Team Members" },
     ],
