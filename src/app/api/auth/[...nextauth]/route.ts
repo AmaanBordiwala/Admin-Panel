@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -16,7 +16,7 @@ const handler = NextAuth({
         // This is a placeholder for demonstration purposes
         if (
           credentials?.email === "user@example.com" &&
-          credentials?.password === "password" &&
+          credentials?.password === "Test@123" &&
           credentials?.domain === "example.com"
         ) {
           return { id: "1", name: "J Smith", email: "user@example.com" };
@@ -44,6 +44,8 @@ const handler = NextAuth({
     signIn: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

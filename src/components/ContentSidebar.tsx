@@ -28,7 +28,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
       }
     }, [content]);
 
-    if (!isContentSidebarVisible || !activeMenu) return null;
+    if (!isContentSidebarVisible || !activeMenu || (content && content.links.length == 0)) return null;
 
     return (
       <div

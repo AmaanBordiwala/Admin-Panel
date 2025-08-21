@@ -1,7 +1,13 @@
 // menuConfig.ts
 import React from "react";
 
-export const menuConfig = {
+export type MenuItem = {
+  label: string;
+  icon: React.ReactNode;
+  links: { href: string; label: string }[];
+};
+
+export const menuConfig: Record<string, MenuItem> = {
   dashboard: {
     label: "Dashboard",
     icon: (
