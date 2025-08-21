@@ -10,7 +10,7 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
         domain: { label: "Domain", type: "text", placeholder: "example.com" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         console.log("Received credentials:", credentials);
         // Add your own logic here to validate credentials
         // This is a placeholder for demonstration purposes

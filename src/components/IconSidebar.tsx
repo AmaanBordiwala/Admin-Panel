@@ -12,7 +12,6 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ activeMenu, setActiveMenu, setHoveredElement }, ref) => {
     const {
       isPinned,
-      setIsPinned,
       setContentSidebarVisibility,
       isContentSidebarVisible,
     } = useSidebarStore();

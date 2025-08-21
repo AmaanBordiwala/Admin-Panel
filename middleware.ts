@@ -1,23 +1,30 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
+export default withAuth(
+  function middleware(req) {
+    // If the user is not authenticated (no token) and trying to access a protected route (not /login),
+    // withAuth will handle the redirect to the sign-in page specified in `pages.signIn`.
+    // We add an explicit redirect here if they somehow land on /login while authenticated.
+    if (req.nextauth.token && req.nextUrl.pathname === '/login') {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
 
-  // If user is NOT authenticated and not already on /login, redirect to /login
-  if (!isAuthenticated && request.nextUrl.pathname !== '/login') {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: '/login', // Specify the custom sign-in page
+    },
   }
-
-  // If user IS authenticated and trying to access /login, redirect to dashboard (or any other page)
-  if (isAuthenticated && request.nextUrl.pathname === '/login') {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  return NextResponse.next();
-}
+);
 
 export const config = {
-  // Match all paths except Next.js internal assets
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    // Match all paths except Next.js internal assets and API routes
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };

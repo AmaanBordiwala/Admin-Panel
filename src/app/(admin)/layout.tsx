@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 import { menuConfig, MenuId } from '../../types/menuConfig';
 import '../globals.css';
 import { useSidebarStore } from '@/lib/store';
+import FullScreenLoader from '@/components/FullScreenLoader'; // Import the new loader component
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react'; // Import useSession
@@ -23,7 +24,6 @@ export default function AdminLayout({
   const [hoveredMenuEl, setHoveredMenuEl] = useState<HTMLDivElement | null>(null);
 
   const {
-    isContentSidebarVisible,
     isPinned,
     setContentSidebarVisibility,
   } = useSidebarStore();
@@ -31,16 +31,20 @@ export default function AdminLayout({
   const contentSidebarRef = useRef<HTMLDivElement>(null);
   const iconSidebarRef = useRef<HTMLDivElement>(null);
 
-  const { data: session, status } = useSession(); // Use useSession
+  const { status } = useSession(); // Use useSession
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (status === "loading") return; // Do nothing while loading
     if (status === "unauthenticated") { // Check for unauthenticated status
-      router.push('/login');
+      router.replace('/login');
     }
   }, [status, router]); // Depend on status
+
+  // Add conditional rendering here
+ if (status === 'loading' || status === 'unauthenticated') {
+    return <FullScreenLoader />;
+  }
 
   const handleMouseLeave = (event: React.MouseEvent) => {
     const target = event.relatedTarget;
