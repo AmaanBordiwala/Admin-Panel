@@ -5,7 +5,11 @@ export type MenuItem = {
   label: string;
   icon: React.ReactNode;
   parenthref?: string;
-  links: { href: string; label: string }[];
+  links: {
+    href: string;
+    label: string;
+    submenu?: { href: string; label: string }[];
+  }[];
 };
 
 export const menuConfig: Record<string, MenuItem> = {
@@ -28,8 +32,22 @@ export const menuConfig: Record<string, MenuItem> = {
     ),
     parenthref: "/dashboard",
     links: [
-      { href: "/dashboard/overview", label: "Overview" },
-      { href: "/dashboard/tasks", label: "Tasks" },
+      {
+        href: "/dashboard/overview",
+        label: "Overview",
+        submenu: [
+          { href: "/dashboard/overview/analytics", label: "Analytics" },
+          { href: "/dashboard/overview/reports", label: "Reports" },
+        ],
+      },
+      {
+        href: "/dashboard/tasks",
+        label: "Tasks",
+        submenu: [
+          { href: "/dashboard/tasks/today", label: "Today's Tasks" },
+          { href: "/dashboard/tasks/upcoming", label: "Upcoming" },
+        ],
+      },
       { href: "/dashboard/projects", label: "Projects" },
     ],
   },

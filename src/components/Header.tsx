@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '../context/ThemeContext';
 import { signOut } from 'next-auth/react';
+import { useSidebarStore } from '@/lib/store';
 
 interface HeaderProps {
   title: string;
@@ -19,6 +20,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const router = useRouter(); // Initialize useRouter
   const { theme, toggleTheme } = useTheme();
+    const { isContentSidebarVisible , isPinned } = useSidebarStore();
 
   const handleLogout = async () => {
     await signOut({ redirect: false }); // Prevent default redirect
@@ -26,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
   };
 
   return (
-    <header className="p-4 flex items-center justify-between bg-sidebar text-foreground shadow-md">
+    <header className={`p-4 flex fixed top-0 w-full transition-all duration-500 left-0 ${isContentSidebarVisible && isPinned ? 'pl-[310px]' : 'pl-28'}  items-center justify-between bg-sidebar text-foreground shadow-md`}>
       <h1 className="text-xl font-semibold">{title}</h1>
 
       <div className="flex items-center space-x-4">

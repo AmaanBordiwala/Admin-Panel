@@ -7,7 +7,7 @@ import { Users, ShoppingCart, DollarSign, UserPlus } from 'lucide-react';
 const DashboardPage: React.FC = () => {
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Dashboard Overview</h2>
+      <h2 className="text-2xl font-semibold mb-4">Dashboard</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <AppCard>
             <Users className="w-8 h-8 mb-3 text-blue-500" />

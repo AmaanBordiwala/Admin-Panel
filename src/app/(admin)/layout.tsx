@@ -26,7 +26,7 @@ export default function AdminLayout({
     null
   );
   const [currentTitle, setCurrentTitle] = useState("Dashboard");
-  const { isPinned, setContentSidebarVisibility } = useSidebarStore();
+  const { isPinned, setContentSidebarVisibility , isContentSidebarVisible } = useSidebarStore();
 
   const contentSidebarRef = useRef<HTMLDivElement>(null);
   const iconSidebarRef = useRef<HTMLDivElement>(null);
@@ -69,10 +69,9 @@ export default function AdminLayout({
     }
   };
 
-  const sidebarStyle = {
-    top: hoveredMenuEl?.offsetTop ?? 0,
-    height: hoveredMenuEl?.offsetHeight ?? "auto",
-  };
+
+    const mainContentMargin =
+    isContentSidebarVisible && isPinned ? 'ml-[280px]' : 'ml-20';
 
   return (
     <div className={`${inter.className} flex h-screen`}>
@@ -84,20 +83,18 @@ export default function AdminLayout({
           ref={iconSidebarRef}
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
-          setHoveredElement={setHoveredMenuEl}
         />
 
         <ContentSidebar
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           ref={contentSidebarRef}
-          style={sidebarStyle}
         />
       </div>
 
-      <main className={`flex-1 transition-all duration-300 ml-20`}>
+       <main className={`flex-1 transition-all duration-500 ${mainContentMargin}`}>
         <Header title={currentTitle} />
-        <div className="p-4">{children}</div>
+        <div className="p-4 mt-[72px]">{children}</div>
       </main>
     </div>
   );
