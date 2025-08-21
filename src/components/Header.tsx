@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { UserCircle, LogOut, Sun, Moon } from 'lucide-react';
 import {
   DropdownMenu,
@@ -10,20 +10,19 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
+import { signOut } from 'next-auth/react';
 
 interface HeaderProps {
   title: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ title }) => {
-  const router = useRouter();
+  const router = useRouter(); // Initialize useRouter
   const { theme, toggleTheme } = useTheme();
-  const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // Prevent default redirect
+    router.push('/login'); // Manually redirect to login page
   };
 
   return (

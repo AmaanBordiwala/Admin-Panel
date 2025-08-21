@@ -8,8 +8,9 @@ import { Inter } from 'next/font/google';
 import { menuConfig, MenuId } from '../../types/menuConfig';
 import '../globals.css';
 import { useSidebarStore } from '@/lib/store';
-import { useAuth } from '../../context/AuthContext';
+
 import { useRouter, usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react'; // Import useSession
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,15 +31,16 @@ export default function AdminLayout({
   const contentSidebarRef = useRef<HTMLDivElement>(null);
   const iconSidebarRef = useRef<HTMLDivElement>(null);
 
-  const { isAuthenticated } = useAuth();
+  const { data: session, status } = useSession(); // Use useSession
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (status === "loading") return; // Do nothing while loading
+    if (status === "unauthenticated") { // Check for unauthenticated status
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [status, router]); // Depend on status
 
   const handleMouseLeave = (event: React.MouseEvent) => {
     const target = event.relatedTarget;

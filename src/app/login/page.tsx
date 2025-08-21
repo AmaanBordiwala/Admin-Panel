@@ -8,12 +8,13 @@ import * as Yup from "yup";
 import InputField from "@/components/InputField";
 import DomainInitializer from "@/components/DomainInitializer";
 import { useTheme } from "../../context/ThemeContext";
-import { useAuth } from "../../context/AuthContext";
+import { signIn } from "next-auth/react";
+import { useToast } from "../../lib/useToast";
 
 const Login: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
-  const { login } = useAuth();
   const router = useRouter();
+  const { showErrorToast , showSuccessToast } = useToast();
 
   const LoginSchema = Yup.object().shape({
     Domain: Yup.string().required("Domain is required"),
@@ -27,10 +28,20 @@ const Login: React.FC = () => {
     password: "",
   };
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log(values);
-    login();
-    router.push("/dashboard");
+  const handleSubmit = async (values: typeof initialValues) => {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      domain: values.Domain,
+    });
+
+    if (result?.error) {
+      showErrorToast(`Sign-in failed: ${result.error}`);
+    } else {
+      showSuccessToast('Login successful! Let’s get started.');
+      router.push("/dashboard");
+    }
   };
 
   return (

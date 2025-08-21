@@ -17,18 +17,18 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       isContentSidebarVisible,
     } = useSidebarStore();
 
-    const handlePin = (id: MenuId) => {
-      if (activeMenu === id && isPinned) {
-        setIsPinned(false);
-        setContentSidebarVisibility(false);
-        setActiveMenu(null);
-        setHoveredElement(null);
-      } else {
-        setActiveMenu(id);
-        setContentSidebarVisibility(true);
-        setIsPinned(true);
-      }
-    };
+    // const handlePin = (id: MenuId) => {
+    //   if (activeMenu === id && isPinned) {
+    //     setIsPinned(false);
+    //     setContentSidebarVisibility(false);
+    //     setActiveMenu(null);
+    //     setHoveredElement(null);
+    //   } else {
+    //     setActiveMenu(id);
+    //     setContentSidebarVisibility(true);
+    //     setIsPinned(true);
+    //   }
+    // };
 
     return (
       <aside
