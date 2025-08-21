@@ -40,7 +40,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
           minWidth: 200,
           padding: '8px',
         }}
-        className="fixed left-[82px] rounded-md shadow-lg bg-sidebar  transition-all duration-200 overflow-hidden"
+        className="fixed left-[81px] rounded-md shadow-lg bg-sidebar  transition-all duration-200 overflow-hidden"
       >
         {content && (
           <nav>

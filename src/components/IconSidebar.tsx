@@ -46,7 +46,7 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                   setHoveredElement(e.currentTarget);
                 }
               }}
-              onClick={() => handlePin(id as MenuId)}
+              // onClick={() => handlePin(id as MenuId)}
               className={`
                   p-4 my-2 rounded-lg cursor-pointer transition-colors duration-200
                   ${activeMenu === id && (isContentSidebarVisible || isPinned)
