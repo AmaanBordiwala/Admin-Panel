@@ -34,7 +34,6 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={`
           fixed top-0 left-0 h-full w-16 flex flex-col bg-sidebar border text-sidebar-foreground shadow-lg z-50 rounded-tr-[30px] rounded-br-[30px]
           transition-all duration-300 ease-in-out
-          
         `}
       >
         <nav className="flex-1 flex flex-col justify-center">
