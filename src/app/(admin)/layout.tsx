@@ -21,8 +21,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [activeMenu, setActiveMenu] = useState<MenuId | null>(null);
-  const [isParentDefaultSelected, setIsParentDefaultSelected] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState<MenuId | null>(null);
   const [currentTitle, setCurrentTitle] = useState("Dashboard");
   const { isPinned, setContentSidebarVisibility , isContentSidebarVisible } = useSidebarStore();
 
@@ -38,8 +37,8 @@ export default function AdminLayout({
     setCurrentTitle(breadcrumbs.join(" / "));
 
     // New logic for default redirection
-    if (activeMenu && isContentSidebarVisible) {
-      const menuItem = menuConfig[activeMenu];
+    if (selectedMenu && isContentSidebarVisible) {
+      const menuItem = menuConfig[selectedMenu];
       if (menuItem && menuItem.parenthref) {
         let isSublinkActive = false;
         if (menuItem.links) {
@@ -62,20 +61,16 @@ export default function AdminLayout({
 
         if (!isSublinkActive && pathname !== menuItem.parenthref) {
           router.push(menuItem.parenthref);
-          setIsParentDefaultSelected(true);
         } else {
-          setIsParentDefaultSelected(false);
         }
       }
-    } else {
-      setIsParentDefaultSelected(false);
     }
 
     if (status === "unauthenticated") {
       // Check for unauthenticated status
       router.replace("/login");
     }
-  }, [pathname, activeMenu, isContentSidebarVisible, router, status]);
+  }, [pathname, selectedMenu, isContentSidebarVisible, router, status]);
 
   // Add conditional rendering here
   if (status === "loading" || status === "unauthenticated") {
@@ -93,7 +88,7 @@ export default function AdminLayout({
       !contentSidebarRef.current.contains(target) &&
       !iconSidebarRef.current.contains(target)
     ) {
-      setActiveMenu(null);
+      setSelectedMenu(null);
       setContentSidebarVisibility(false);
     }
   };
@@ -110,15 +105,13 @@ export default function AdminLayout({
       >
         <IconSidebar
           ref={iconSidebarRef}
-          activeMenu={activeMenu}
-          setActiveMenu={setActiveMenu}
+          selectedMenu={selectedMenu}
+          setSelectedMenu={setSelectedMenu}
         />
 
         <ContentSidebar
-          activeMenu={activeMenu}
-          setActiveMenu={setActiveMenu}
           ref={contentSidebarRef}
-          isParentDefaultSelected={isParentDefaultSelected}
+          setSelectedMenu={setSelectedMenu}
         />
       </div>
 
