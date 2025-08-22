@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
 
