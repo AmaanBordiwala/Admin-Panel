@@ -23,9 +23,9 @@ const Login: React.FC = () => {
   });
 
   const initialValues = {
-    Domain: "",
-    email: "",
-    password: "",
+    Domain: "Wizcoder",
+    email: "Wiz@example.com",
+    password: "Wiz@123",
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
