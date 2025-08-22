@@ -29,7 +29,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
       <aside
         ref={ref}
         className={`
-          fixed pl-20 top-0 h-full w-72 bg-background rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
+          fixed pl-16 top-0 h-full w-72 bg-background rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
           transition-all duration-500 ease-in-out
           ${isContentSidebarVisible && content ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
         `}
@@ -56,16 +56,33 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                   >
                     <Link
                       href={link.href}
-                      className={`block p-2 rounded-md transition-colors duration-150
+                      className={`flex items-center justify-between p-2 rounded-md transition-colors duration-150
                         ${pathname === link.href
-                          ? 'bg-muted text-primary-foreground'
+                          ? 'bg-primary text-primary-foreground'
                           : 'hover:bg-muted'}
                       `}
                     >
-                      {link.label}
+                      <span>{link.label}</span>
+                      {link.submenu && (
+                        <svg
+                          className={`w-4 h-4 transition-transform duration-300 ${
+                            hoveredLink === link.href ? 'rotate-90' : ''
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 5l7 7-7 7"
+                          ></path>
+                        </svg>
+                      )}
                     </Link>
                     {hoveredLink === link.href && link.submenu && (
-                      <div className="absolute left-full pl-2 top-0 w-56 bg-background rounded-r-[20px] shadow-lg">
+                      <div className="absolute left-full pl-2 top-0 w-42 bg-background rounded-r-[20px] shadow-lg">
                         <nav className="p-2">
                           <ul>
                             {link.submenu.map((subItem) => (

@@ -71,7 +71,7 @@ export default function AdminLayout({
 
 
     const mainContentMargin =
-    isContentSidebarVisible && isPinned ? 'ml-[280px]' : 'ml-20';
+    isContentSidebarVisible && isPinned ? 'ml-[280px]' : 'ml-16';
 
   return (
     <div className={`${inter.className} flex h-screen`}>

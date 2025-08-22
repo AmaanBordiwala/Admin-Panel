@@ -20,15 +20,18 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const router = useRouter(); // Initialize useRouter
   const { theme, toggleTheme } = useTheme();
-    const { isContentSidebarVisible , isPinned } = useSidebarStore();
+    const { isContentSidebarVisible , isPinned , setIsPinned , setContentSidebarVisibility } = useSidebarStore();
 
   const handleLogout = async () => {
-    await signOut({ redirect: false }); // Prevent default redirect
-    router.push('/login'); // Manually redirect to login page
+    setIsPinned(false)
+    setContentSidebarVisibility(false)
+    await signOut({ redirect: false });
+    router.push('/login');
+     
   };
 
   return (
-    <header className={`p-4 flex fixed top-0 w-full transition-all duration-500 left-0 ${isContentSidebarVisible && isPinned ? 'pl-[310px]' : 'pl-28'}  items-center justify-between bg-sidebar text-foreground shadow-md`}>
+    <header className={`p-4 flex fixed top-0 w-full transition-all duration-500 left-0 ${isContentSidebarVisible && isPinned ? 'pl-[310px]' : 'pl-24'}  items-center justify-between bg-sidebar text-foreground shadow-md`}>
       <h1 className="text-xl font-semibold">{title}</h1>
 
       <div className="flex items-center space-x-4">
