@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { menuConfig, MenuId } from '../types/menuConfig';
-import { useSidebarStore } from '../lib/store';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { menuConfig, MenuId } from "../types/menuConfig";
+import { useSidebarStore } from "../lib/store";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface ContentSidebarProps {
   activeMenu: MenuId | null;
@@ -15,8 +15,11 @@ interface ContentSidebarProps {
 
 const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
   ({ activeMenu, setActiveMenu }, ref) => {
-    const { isContentSidebarVisible, setContentSidebarVisibility, setIsPinned } =
-      useSidebarStore();
+    const {
+      isContentSidebarVisible,
+      setContentSidebarVisibility,
+      setIsPinned,
+    } = useSidebarStore();
     const pathname = usePathname();
     const content = activeMenu ? menuConfig[activeMenu] : null;
     const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -34,8 +37,8 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
           transition-all duration-500 ease-in-out
           ${
             isContentSidebarVisible && content
-              ? 'translate-x-0 opacity-100'
-              : '-translate-x-full opacity-0'
+              ? "translate-x-0 opacity-100"
+              : "-translate-x-full opacity-0"
           }
         `}
       >
@@ -69,12 +72,12 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                 {/* Parent item styled as distinct heading */}
                 <li className="mb-3">
                   <Link
-                    href={content.parenthref || '#'}
+                    href={content.parenthref || "#"}
                     className={`block p-2 pl-3 rounded-md text-lg font-bold tracking-wide transition-colors duration-150
                       ${
                         pathname === content.parenthref
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-sidebar-foreground  hover:bg-muted'
+                          ? "bg-primary text-primary-foreground"
+                          : "text-sidebar-foreground  hover:bg-muted"
                       }
                     `}
                   >
@@ -89,9 +92,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                     onMouseEnter={() =>
                       link.submenu && setHoveredLink(link.href)
                     }
-                    onMouseLeave={() =>
-                      link.submenu && setHoveredLink(null)
-                    }
+                    onMouseLeave={() => link.submenu && setHoveredLink(null)}
                     className="relative"
                   >
                     <Link
@@ -99,8 +100,8 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                       className={`flex items-center justify-between p-2 px-3 my-1.5 rounded-md transition-colors duration-150
                         ${
                           pathname === link.href
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-primary/10'
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-primary/10"
                         }
                       `}
                     >
@@ -108,7 +109,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                       {link.submenu && (
                         <svg
                           className={`w-4 h-4 transition-transform duration-300 ${
-                            hoveredLink === link.href ? '' : 'rotate-90'
+                            hoveredLink === link.href ? "" : "rotate-90"
                           }`}
                           fill="none"
                           stroke="currentColor"
@@ -124,34 +125,33 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                       )}
                     </Link>
 
-             {hoveredLink === link.href && link.submenu && (
-  <div className="absolute left-full top-0 w-42 bg-muted rounded-r-[20px] shadow-lg ">
-    {/* Small left polygon arrow */}
-    <span className="absolute -left-2 top-3 w-0 h-0 border-t-10 border-b-10 border-r-10 border-t-transparent border-b-transparent border-r-muted"></span>
+                    {hoveredLink === link.href && link.submenu && (
+                      <div className="absolute left-full top-0 w-42 bg-sidebar rounded-r-[20px] shadow-lg ">
+                        {/* Small left polygon arrow */}
+                        <span className="absolute -left-2 top-3 w-0 h-0 border-t-10 border-b-10 border-r-10 border-t-transparent border-b-transparent border-r-sidebar"></span>
 
-    <nav className="p-3">
-      <ul>
-        {link.submenu.map((subItem) => (
-          <li key={subItem.href}>
-            <Link
-              href={subItem.href}
-              className={`block p-2 rounded-md transition-colors duration-150
-                ${
-                  pathname === subItem.href
-                    ? 'bg-muted text-sm text-primary-foreground'
-                    : 'hover:bg-primary/10'
-                }
-              `}
-            >
-              {subItem.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-)}
-
+                        <nav className="p-3">
+                          <ul>
+                            {link.submenu.map((subItem) => (
+                              <li key={subItem.href}>
+                                <Link
+                                  href={subItem.href}
+                                  className={`block p-2 rounded-md transition-colors duration-150
+                                      ${
+                                        pathname === subItem.href
+                                          ? "bg-muted text-sm text-primary-foreground"
+                                          : "hover:bg-primary/10"
+                                      }
+                                    `}
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </nav>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -163,6 +163,6 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
   }
 );
 
-ContentSidebar.displayName = 'ContentSidebar';
+ContentSidebar.displayName = "ContentSidebar";
 
 export default ContentSidebar;
