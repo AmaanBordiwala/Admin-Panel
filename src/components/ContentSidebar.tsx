@@ -124,30 +124,34 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                       )}
                     </Link>
 
-                    {hoveredLink === link.href && link.submenu && (
-                      <div className="absolute left-full pl-2 top-0 w-42 bg-sidebar rounded-r-[20px] shadow-lg">
-                        <nav className="p-2">
-                          <ul>
-                            {link.submenu.map((subItem) => (
-                              <li key={subItem.href}>
-                                <Link
-                                  href={subItem.href}
-                                  className={`block p-2 rounded-md transition-colors duration-150
-                                    ${
-                                      pathname === subItem.href
-                                        ? 'bg-muted text-sm text-primary-foreground'
-                                        : 'hover:bg-muted'
-                                    }
-                                  `}
-                                >
-                                  {subItem.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </nav>
-                      </div>
-                    )}
+             {hoveredLink === link.href && link.submenu && (
+  <div className="absolute left-full top-0 w-42 bg-muted rounded-r-[20px] shadow-lg ">
+    {/* Small left polygon arrow */}
+    <span className="absolute -left-2 top-3 w-0 h-0 border-t-10 border-b-10 border-r-10 border-t-transparent border-b-transparent border-r-muted"></span>
+
+    <nav className="p-3">
+      <ul>
+        {link.submenu.map((subItem) => (
+          <li key={subItem.href}>
+            <Link
+              href={subItem.href}
+              className={`block p-2 rounded-md transition-colors duration-150
+                ${
+                  pathname === subItem.href
+                    ? 'bg-muted text-sm text-primary-foreground'
+                    : 'hover:bg-sidebar'
+                }
+              `}
+            >
+              {subItem.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+)}
+
                   </li>
                 ))}
               </ul>
