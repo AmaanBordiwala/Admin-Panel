@@ -70,8 +70,13 @@ export const menuConfig: Record<string, MenuItem> = {
     ),
     parenthref: "/analytics",
     links: [
-      { href: "/analytics/view", label: "View" },
-      { href: "/analytics/users", label: "Users" },
+      { href: "/analytics/view", label: "View" ,},
+      { href: "/analytics/users", label: "Users" , 
+            submenu: [
+          { href: "/analytics/user/all", label: "All User" },
+          { href: "/analytics/user/new", label: "New User" },
+        ],
+       },
       { href: "/analytics/revenue", label: "Revenue" },
     ],
   },

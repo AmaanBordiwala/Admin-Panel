@@ -10,11 +10,13 @@ interface ContentSidebarProps {
   activeMenu: MenuId | null;
   setActiveMenu: (value: MenuId | null) => void;
   style?: React.CSSProperties;
+  isParentDefaultSelected: boolean;
 }
 
 const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
   ({ activeMenu, setActiveMenu }, ref) => {
-    const { isContentSidebarVisible, setContentSidebarVisibility, setIsPinned } = useSidebarStore();
+    const { isContentSidebarVisible, setContentSidebarVisibility, setIsPinned } =
+      useSidebarStore();
     const pathname = usePathname();
     const content = activeMenu ? menuConfig[activeMenu] : null;
     const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -28,38 +30,78 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
     return (
       <aside
         ref={ref}
-        className={`
-          fixed pl-16 top-0 h-full w-72 bg-background rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
+        className={`fixed pl-16 top-0 h-full w-72 bg-background border rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
           transition-all duration-500 ease-in-out
-          ${isContentSidebarVisible && content ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
+          ${
+            isContentSidebarVisible && content
+              ? 'translate-x-0 opacity-100'
+              : '-translate-x-full opacity-0'
+          }
         `}
       >
         {content && content.links.length > 0 && (
           <>
-            <div className="h-16 p-4 flex items-center justify-between border-b border-sidebar-border">
-              <h2 className="text-xl font-bold text-sidebar-foreground">{content.label}</h2>
-              <button onClick={handleClose} className="p-1 rounded-full hover:bg-muted text-muted-foreground">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            {/* Close Icon at Top */}
+            <div className="h-16 p-4 flex items-center justify-end border-b border-sidebar-border">
+              <button
+                onClick={handleClose}
+                className="p-1 rounded-full hover:bg-muted text-muted-foreground"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
+            {/* Menu list */}
             <nav className="p-4">
               <ul>
+                {/* Parent item styled as distinct heading */}
+                <li className="mb-3">
+                  <Link
+                    href={content.parenthref || '#'}
+                    className={`block p-2 pl-3 rounded-md text-lg font-bold tracking-wide transition-colors duration-150
+                      ${
+                        pathname === content.parenthref
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-sidebar-foreground  hover:bg-muted'
+                      }
+                    `}
+                  >
+                    {content.label}
+                  </Link>
+                </li>
+
+                {/* Child links */}
                 {content.links.map((link) => (
                   <li
                     key={link.href}
-                    onMouseEnter={() => link.submenu && setHoveredLink(link.href)}
-                    onMouseLeave={() => link.submenu && setHoveredLink(null)}
+                    onMouseEnter={() =>
+                      link.submenu && setHoveredLink(link.href)
+                    }
+                    onMouseLeave={() =>
+                      link.submenu && setHoveredLink(null)
+                    }
                     className="relative"
                   >
                     <Link
                       href={link.href}
-                      className={`flex items-center justify-between p-2 rounded-md transition-colors duration-150
-                        ${pathname === link.href
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'}
+                      className={`flex items-center justify-between p-2 px-3 my-1.5 rounded-md transition-colors duration-150
+                        ${
+                          pathname === link.href
+                            ? 'bg-primary text-primary-foreground'
+                            : 'hover:bg-muted'
+                        }
                       `}
                     >
                       <span>{link.label}</span>
@@ -77,12 +119,13 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                             strokeLinejoin="round"
                             strokeWidth="2"
                             d="M9 5l7 7-7 7"
-                          ></path>
+                          />
                         </svg>
                       )}
                     </Link>
+
                     {hoveredLink === link.href && link.submenu && (
-                      <div className="absolute left-full pl-2 top-0 w-42 bg-background rounded-r-[20px] shadow-lg">
+                      <div className="absolute left-full pl-2 top-0 w-42 bg-sidebar rounded-r-[20px] shadow-lg">
                         <nav className="p-2">
                           <ul>
                             {link.submenu.map((subItem) => (
@@ -90,9 +133,11 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                                 <Link
                                   href={subItem.href}
                                   className={`block p-2 rounded-md transition-colors duration-150
-                                    ${pathname === subItem.href
-                                      ? 'bg-muted text-primary-foreground'
-                                      : 'hover:bg-muted'}
+                                    ${
+                                      pathname === subItem.href
+                                        ? 'bg-muted text-sm text-primary-foreground'
+                                        : 'hover:bg-muted'
+                                    }
                                   `}
                                 >
                                   {subItem.label}

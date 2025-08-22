@@ -5,7 +5,7 @@ import IconSidebar from "@/components/IconSidebar";
 import ContentSidebar from "@/components/ContentSidebar";
 import Header from "@/components/Header";
 import { Inter } from "next/font/google";
-import { MenuId } from "../../types/menuConfig";
+import { MenuId, menuConfig } from "../../types/menuConfig";
 import "../globals.css";
 import { useSidebarStore } from "@/lib/store";
 import FullScreenLoader from "@/components/FullScreenLoader";
@@ -22,9 +22,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [activeMenu, setActiveMenu] = useState<MenuId | null>(null);
-  const [hoveredMenuEl, setHoveredMenuEl] = useState<HTMLDivElement | null>(
-    null
-  );
+  const [isParentDefaultSelected, setIsParentDefaultSelected] = useState(false);
   const [currentTitle, setCurrentTitle] = useState("Dashboard");
   const { isPinned, setContentSidebarVisibility , isContentSidebarVisible } = useSidebarStore();
 
@@ -38,14 +36,46 @@ export default function AdminLayout({
     useEffect(() => {
     const breadcrumbs = getBreadcrumbs(pathname);
     setCurrentTitle(breadcrumbs.join(" / "));
-  }, [pathname]);
-  
-  useEffect(() => {
+
+    // New logic for default redirection
+    if (activeMenu && isContentSidebarVisible) {
+      const menuItem = menuConfig[activeMenu];
+      if (menuItem && menuItem.parenthref) {
+        let isSublinkActive = false;
+        if (menuItem.links) {
+          for (const link of menuItem.links) {
+            if (pathname === link.href) {
+              isSublinkActive = true;
+              break;
+            }
+            if (link.submenu) {
+              for (const subItem of link.submenu) {
+                if (pathname === subItem.href) {
+                  isSublinkActive = true;
+                  break;
+                }
+              }
+            }
+            if (isSublinkActive) break;
+          }
+        }
+
+        if (!isSublinkActive && pathname !== menuItem.parenthref) {
+          router.push(menuItem.parenthref);
+          setIsParentDefaultSelected(true);
+        } else {
+          setIsParentDefaultSelected(false);
+        }
+      }
+    } else {
+      setIsParentDefaultSelected(false);
+    }
+
     if (status === "unauthenticated") {
       // Check for unauthenticated status
       router.replace("/login");
     }
-  }, [status, router]); // Depend on status
+  }, [pathname, activeMenu, isContentSidebarVisible, router, status]);
 
   // Add conditional rendering here
   if (status === "loading" || status === "unauthenticated") {
@@ -65,7 +95,6 @@ export default function AdminLayout({
     ) {
       setActiveMenu(null);
       setContentSidebarVisibility(false);
-      setHoveredMenuEl(null);
     }
   };
 
@@ -89,6 +118,7 @@ export default function AdminLayout({
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           ref={contentSidebarRef}
+          isParentDefaultSelected={isParentDefaultSelected}
         />
       </div>
 

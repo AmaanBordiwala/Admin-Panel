@@ -40,15 +40,8 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       >
         <nav className="flex-1 flex flex-col justify-center">
           {Object.entries(menuConfig).map(([id, item]) => (
-            <Link href={item.parenthref || '#'} key={id}>
-              <div
-                // onMouseEnter={() => {
-                //   if (!isPinned) {
-                //     setActiveMenu(id as MenuId);
-                //     setContentSidebarVisibility(true);
-                //   }
-                // }}
-            
+            <div
+                key={id}
                 onClick={() => handlePin(id as MenuId)}
                 className={`
                      p-2.5 my-2 mx-[7px] rounded-lg cursor-pointer transition-colors duration-200 flex items-center justify-center
@@ -59,7 +52,6 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
               >
                 {item.icon}
               </div>
-            </Link>
           ))}
         </nav>
       </aside>
