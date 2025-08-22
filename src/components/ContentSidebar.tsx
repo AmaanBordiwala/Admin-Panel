@@ -100,7 +100,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                         ${
                           pathname === link.href
                             ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-muted'
+                            : 'hover:bg-primary/10'
                         }
                       `}
                     >
@@ -139,7 +139,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                 ${
                   pathname === subItem.href
                     ? 'bg-muted text-sm text-primary-foreground'
-                    : 'hover:bg-sidebar'
+                    : 'hover:bg-primary/10'
                 }
               `}
             >

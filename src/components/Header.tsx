@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter
-import { UserCircle, LogOut, Sun, Moon } from 'lucide-react';
+import { UserCircle, LogOut, Sun, Moon, Palette, Check } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -12,6 +12,7 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { signOut } from 'next-auth/react';
 import { useSidebarStore } from '@/lib/store';
+import { colorPalettes } from '@/lib/theme';
 
 interface HeaderProps {
   title: string;
@@ -19,15 +20,18 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const router = useRouter(); // Initialize useRouter
-  const { theme, toggleTheme } = useTheme();
-    const { isContentSidebarVisible , isPinned , setIsPinned , setContentSidebarVisibility } = useSidebarStore();
+  const { baseTheme, colorPalette, setBaseTheme, setColorPalette } = useTheme();
+  const { isContentSidebarVisible , isPinned , setIsPinned , setContentSidebarVisibility } = useSidebarStore();
 
   const handleLogout = async () => {
     setIsPinned(false)
     setContentSidebarVisibility(false)
     await signOut({ redirect: false });
     router.push('/login');
-     
+  };
+
+  const toggleBaseTheme = () => {
+    setBaseTheme(baseTheme === 'light' ? 'dark' : 'light');
   };
 
   return (
@@ -36,11 +40,36 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
 
       <div className="flex items-center space-x-4">
         <button
-          onClick={toggleTheme}
+          onClick={toggleBaseTheme}
           className="p-2 rounded-full cursor-pointer hover:bg-muted"
         >
-        {theme === 'dark' ? ( <Sun className="w-6 h-6 text-yellow-500" /> ) : ( <Moon className="w-6 h-6 text-gray-700" /> )}
+          {baseTheme === 'dark' ? ( <Sun className="w-6 h-6 text-yellow-500" /> ) : ( <Moon className="w-6 h-6 text-gray-700" /> )}
         </button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="p-2 rounded-full cursor-pointer hover:bg-muted"
+            >
+              <Palette className="w-6 h-6 text-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-40 bg-popover text-popover-foreground"
+          >
+            {colorPalettes.map((p) => (
+              <DropdownMenuItem
+                key={p.name}
+                onClick={() => setColorPalette(p.name)}
+                className="cursor-pointer hover:bg-muted flex items-center justify-between"
+              >
+                {p.name}
+                {colorPalette === p.name && <Check className="w-4 h-4 text-green-500" />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

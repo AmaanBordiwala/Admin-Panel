@@ -1,10 +1,13 @@
 'use client'
 
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react'
+import { baseThemes, colorPalettes } from '@/lib/theme'
 
 interface ThemeContextType {
-  theme: string
-  toggleTheme: () => void
+  baseTheme: string
+  colorPalette: string
+  setBaseTheme: (theme: string) => void
+  setColorPalette: (palette: string) => void
   primaryColor: string
   secondaryColor: string
 }
@@ -12,59 +15,65 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<string | undefined>(undefined)
+  const [baseTheme, setBaseThemeState] = useState<string>('light')
+  const [colorPalette, setColorPaletteState] = useState<string>('default')
   const [mounted, setMounted] = useState<boolean>(false)
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme')
-    if (storedTheme) {
-      setTheme(storedTheme)
+    const storedBaseTheme = localStorage.getItem('baseTheme')
+    const storedColorPalette = localStorage.getItem('colorPalette')
+
+    if (storedBaseTheme && baseThemes.find(t => t.name === storedBaseTheme)) {
+      setBaseThemeState(storedBaseTheme)
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark')
+      setBaseThemeState('dark')
     } else {
-      setTheme('light')
+      setBaseThemeState('light')
+    }
+
+    if (storedColorPalette && colorPalettes.find(p => p.name === storedColorPalette)) {
+      setColorPaletteState(storedColorPalette)
+    } else {
+      setColorPaletteState('default')
     }
     setMounted(true)
   }, [])
 
   useEffect(() => {
-    if (!mounted || theme === undefined) return
+    if (!mounted) return
 
     const root = window.document.documentElement
-    root.classList.remove('light', 'dark') // Remove both to ensure correct class is applied
-    root.classList.add(theme)
-    localStorage.setItem('theme', theme)
-  }, [theme, mounted])
+    root.classList.remove(...baseThemes.map(t => t.name))
+    root.classList.remove(...colorPalettes.map(p => p.name))
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = () => {
-      // Only update if no explicit theme is set by the user
-      if (!localStorage.getItem('theme')) {
-        setTheme(mediaQuery.matches ? 'dark' : 'light')
-      }
+    root.classList.add(baseTheme)
+    root.classList.add(colorPalette)
+
+    localStorage.setItem('baseTheme', baseTheme)
+    localStorage.setItem('colorPalette', colorPalette)
+  }, [baseTheme, colorPalette, mounted])
+
+  const setBaseTheme = (newTheme: string) => {
+    if (baseThemes.find(t => t.name === newTheme)) {
+      setBaseThemeState(newTheme)
     }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light'
-      localStorage.setItem('theme', newTheme) // Persist user's choice
-      return newTheme
-    })
   }
 
-  const primaryColor = theme === 'dark' ? '#6366F1' : '#4F46E5'
-  const secondaryColor = theme === 'dark' ? '#8B5CF6' : '#7C3AED'
+  const setColorPalette = (newPalette: string) => {
+    if (colorPalettes.find(p => p.name === newPalette)) {
+      setColorPaletteState(newPalette)
+    }
+  }
 
-  if (!mounted || theme === undefined) return null // avoids hydration mismatch and waits for theme to be determined
+  const currentPalette = colorPalettes.find(p => p.name === colorPalette) || colorPalettes[0]
+  const primaryColor = baseTheme === 'dark' ? currentPalette.dark.primary : currentPalette.light.primary
+  const secondaryColor = baseTheme === 'dark' ? currentPalette.dark.secondary : currentPalette.light.secondary
+
+  if (!mounted) return null
 
   return (
     <ThemeContext.Provider
-      value={{ theme, toggleTheme, primaryColor, secondaryColor }}
+      value={{ baseTheme, colorPalette, setBaseTheme, setColorPalette, primaryColor, secondaryColor }}
     >
       {children}
     </ThemeContext.Provider>

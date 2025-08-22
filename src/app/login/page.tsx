@@ -12,9 +12,13 @@ import { signIn } from "next-auth/react";
 import { useToast } from "../../lib/useToast";
 
 const Login: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { baseTheme, setBaseTheme } = useTheme();
   const router = useRouter();
   const { showErrorToast , showSuccessToast } = useToast();
+
+  const toggleBaseTheme = () => {
+    setBaseTheme(baseTheme === 'light' ? 'dark' : 'light');
+  };
 
   const LoginSchema = Yup.object().shape({
     Domain: Yup.string().required("Domain is required"),
@@ -48,10 +52,10 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-background text-foreground flex relative">
       {/* Theme Toggle */}
       <button
-        onClick={toggleTheme}
+        onClick={toggleBaseTheme}
         className="absolute top-4 right-4 p-2 cursor-pointer rounded-full hover:bg-muted transition-colors"
       >
-        {theme === "dark" ? (
+        {baseTheme === "dark" ? (
           <Sun className="w-6 h-6 text-yellow-500" />
         ) : (
           <Moon className="w-6 h-6 text-gray-700" />
