@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   });
 
   const initialValues = {
-    Domain: "Wizcoder",
+    Domain: "wizcoder",
     email: "Wiz@example.com",
     password: "Wiz@123",
   };

@@ -17,7 +17,7 @@ export const authOptions: AuthOptions = {
         if (
           credentials?.email === "Wiz@example.com" &&
           credentials?.password === "Wiz@123" &&
-          credentials?.domain === "Wizcoder"
+          credentials?.domain === "wizcoder"
         ) {
           return { id: "1", name: "J Smith", email: "user@example.com" };
         } else {
