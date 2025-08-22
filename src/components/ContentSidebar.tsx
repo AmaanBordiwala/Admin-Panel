@@ -30,7 +30,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
     return (
       <aside
         ref={ref}
-        className={`fixed pl-16 top-0 h-full w-72 bg-background border rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
+        className={`fixed pl-16 top-0 h-full w-72 bg-background border rounded-l-[30px] rounded-r-[20px] text-sidebar-foreground border-l border-sidebar-border shadow-md flex flex-col
           transition-all duration-500 ease-in-out
           ${
             isContentSidebarVisible && content

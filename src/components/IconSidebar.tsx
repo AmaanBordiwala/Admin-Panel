@@ -32,7 +32,7 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       <aside
         ref={ref}
         className={`
-          fixed top-0 left-0 h-full w-16 flex flex-col bg-sidebar border text-sidebar-foreground shadow-lg z-50 rounded-full
+          fixed top-0 left-0 h-full w-16  flex flex-col bg-sidebar border text-sidebar-foreground shadow-lg z-50 rounded-[30px]
           transition-all duration-300 ease-in-out
         `}
       >
