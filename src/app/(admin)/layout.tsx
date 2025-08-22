@@ -9,7 +9,6 @@ import { MenuId, menuConfig } from "../../types/menuConfig";
 import "../globals.css";
 import { useSidebarStore } from "@/lib/store";
 import FullScreenLoader from "@/components/FullScreenLoader";
-
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getBreadcrumbs } from "../../../utils/getBreadcrumbs";
@@ -23,24 +22,28 @@ export default function AdminLayout({
 }) {
   const [selectedMenu, setSelectedMenu] = useState<MenuId | null>(null);
   const [currentTitle, setCurrentTitle] = useState("Dashboard");
-  const { isPinned, setContentSidebarVisibility , isContentSidebarVisible } = useSidebarStore();
+  const { isPinned, setContentSidebarVisibility, isContentSidebarVisible } =
+    useSidebarStore();
 
   const contentSidebarRef = useRef<HTMLDivElement>(null);
   const iconSidebarRef = useRef<HTMLDivElement>(null);
 
-  const { status } = useSession(); // Use useSession
+  const { status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
-    useEffect(() => {
+  // track if we just opened a menu (to allow one-time redirect)
+  const [justOpened, setJustOpened] = useState(false);
+
+  useEffect(() => {
     const breadcrumbs = getBreadcrumbs(pathname);
     setCurrentTitle(breadcrumbs.join(" / "));
 
-    // New logic for default redirection
     if (selectedMenu && isContentSidebarVisible) {
       const menuItem = menuConfig[selectedMenu];
       if (menuItem && menuItem.parenthref) {
         let isSublinkActive = false;
+
         if (menuItem.links) {
           for (const link of menuItem.links) {
             if (pathname === link.href) {
@@ -59,20 +62,19 @@ export default function AdminLayout({
           }
         }
 
-        if (!isSublinkActive && pathname !== menuItem.parenthref) {
+        // only redirect once when menu first opens
+        if (!isSublinkActive && pathname !== menuItem.parenthref && justOpened) {
           router.push(menuItem.parenthref);
-        } else {
+          setJustOpened(false); // reset
         }
       }
     }
 
     if (status === "unauthenticated") {
-      // Check for unauthenticated status
       router.replace("/login");
     }
-  }, [pathname, selectedMenu, isContentSidebarVisible, router, status]);
+  }, [pathname, selectedMenu, isContentSidebarVisible, router, status, justOpened]);
 
-  // Add conditional rendering here
   if (status === "loading" || status === "unauthenticated") {
     return <FullScreenLoader />;
   }
@@ -93,9 +95,8 @@ export default function AdminLayout({
     }
   };
 
-
-    const mainContentMargin =
-    isContentSidebarVisible && isPinned ? 'ml-[280px]' : 'ml-16';
+  const mainContentMargin =
+    isContentSidebarVisible && isPinned ? "ml-[280px]" : "ml-16";
 
   return (
     <div className={`${inter.className} flex h-screen`}>
@@ -106,16 +107,24 @@ export default function AdminLayout({
         <IconSidebar
           ref={iconSidebarRef}
           selectedMenu={selectedMenu}
-          setSelectedMenu={setSelectedMenu}
+          setSelectedMenu={(menu) => {
+            setSelectedMenu(menu);
+            setJustOpened(true); // mark just opened for redirect logic
+          }}
         />
 
         <ContentSidebar
           ref={contentSidebarRef}
-          setSelectedMenu={setSelectedMenu}
+          setSelectedMenu={(menu) => {
+            setSelectedMenu(menu);
+            setJustOpened(true);
+          }}
         />
       </div>
 
-       <main className={`flex-1 transition-all duration-500 ${mainContentMargin}`}>
+      <main
+        className={`flex-1 transition-all duration-500 ${mainContentMargin}`}
+      >
         <Header title={currentTitle} />
         <div className="p-4 mt-[72px]">{children}</div>
       </main>

@@ -24,6 +24,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
     const handleClose = () => {
       setContentSidebarVisibility(false);
       setIsPinned(false);
+      setSelectedMenu(null);
     };
 
     return (
@@ -63,25 +64,31 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
           <ul>
             {Object.entries(menuConfig).map(([menuId, content]) => (
               <li key={menuId} className="mb-3">
-                <Link
-                  href={content.parenthref || "#"}
+                {/* parent menu - just change selectedMenu, don't navigate */}
+                <button
                   onClick={() => setSelectedMenu(menuId as MenuId)}
-                  className={`flex items-center justify-between p-2 pl-3 rounded-md text-lg font-bold tracking-wide transition-colors duration-150
+                  className={`w-full cursor-pointer text-left flex items-center justify-between p-2 pl-3 rounded-md text-lg font-bold tracking-wide transition-colors duration-150
                     ${
                       pathname === content.parenthref
                         ? "bg-primary text-primary-foreground"
-                        : "text-sidebar-foreground  hover:bg-muted"
+                        : "text-sidebar-foreground hover:bg-muted"
                     }
                   `}
                 >
                   <span>{content.label}</span>
-                </Link>
+                </button>
+
+                {/* sub links */}
                 <ul className="pl-4 mt-2">
                   {content.links.map((link) => (
                     <li
                       key={link.href}
-                      onMouseEnter={() => link.submenu && setHoveredLink(link.href)}
-                      onMouseLeave={() => link.submenu && setHoveredLink(null)}
+                      onMouseEnter={() =>
+                        link.submenu && setHoveredLink(link.href)
+                      }
+                      onMouseLeave={() =>
+                        link.submenu && setHoveredLink(null)
+                      }
                       className="relative"
                     >
                       <Link
@@ -111,6 +118,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                           </svg>
                         )}
                       </Link>
+
                       {hoveredLink === link.href && link.submenu && (
                         <div className="absolute left-full top-0 w-48 bg-background border rounded-r-[20px] shadow-lg">
                           <span className="absolute -left-2 top-3 w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-background"></span>
