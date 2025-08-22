@@ -1,0 +1,10 @@
+
+
+services:
+  admin-panel:
+  
+    build: .
+    container_name: admin-panel
+    ports:
+      - "3000:3000"
+    
