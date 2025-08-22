@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
         // Add your own logic here to validate credentials
         // This is a placeholder for demonstration purposes
         if (
-          credentials?.email === "Wiz@example.com" &&
+          credentials?.email === "wiz@example.com" &&
           credentials?.password === "Wiz@123" &&
           credentials?.domain === "wizcoder"
         ) {
