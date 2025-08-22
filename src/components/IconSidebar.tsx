@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import React from 'react';
 import { menuConfig, MenuId } from '../types/menuConfig';
 import { useSidebarStore } from '../lib/store';
+import Image from 'next/image';
 
 interface SidebarProps {
   activeMenu: MenuId | null;
@@ -36,7 +38,12 @@ const IconSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
           transition-all duration-300 ease-in-out
         `}
       >
-        <nav className="flex-1 flex flex-col justify-center">
+        <div className="flex items-center justify-center p-4">
+          <Link href="/dashboard">
+            <Image src="/logo.svg" alt="Logo" width={35} height={35} className="transition-transform duration-300 ease-in-out transform hover:scale-110" />
+          </Link>
+        </div>
+        <nav className="flex-1 flex flex-col justify-center mt-4">
           {Object.entries(menuConfig).map(([id, item]) => (
             <div
                 key={id}
