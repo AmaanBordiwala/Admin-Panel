@@ -108,7 +108,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                       {link.submenu && (
                         <svg
                           className={`w-4 h-4 transition-transform duration-300 ${
-                            hoveredLink === link.href ? 'rotate-90' : ''
+                            hoveredLink === link.href ? '' : 'rotate-90'
                           }`}
                           fill="none"
                           stroke="currentColor"
