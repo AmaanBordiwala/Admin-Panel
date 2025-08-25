@@ -118,7 +118,10 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
                           : "text-sidebar-foreground hover:bg-muted"
                       }`}
                   >
-                    <span>{content.label}</span>
+                    <div className="flex items-center gap-2">
+                      {content.icon}
+                      <span>{content.label}</span>
+                    </div>
                   </Link>
 
                   <ul className="pl-4 mt-2">
