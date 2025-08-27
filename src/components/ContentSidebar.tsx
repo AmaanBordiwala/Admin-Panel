@@ -173,7 +173,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
         </aside>
 
         {/* Submenu */}
-        {hoveredLink && submenuPos && submenuItems && (
+        {isContentSidebarVisible && hoveredLink && submenuPos && submenuItems && (
           <div
             className="fixed z-[100] w-48 bg-background border rounded-r-[20px] shadow-lg"
             style={{ top: submenuPos.top, left: submenuPos.left }}
