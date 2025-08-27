@@ -66,7 +66,7 @@ const ContentSidebar = React.forwardRef<HTMLDivElement, ContentSidebarProps>(
               <li key={menuId} className="mb-3">
                 {/* parent menu - just change selectedMenu, don't navigate */}
                 <Link
-                  href={content.parenthref}
+                  href={content.parenthref || '#'}
                   onClick={() => setSelectedMenu(menuId as MenuId)}
                   className={`w-full cursor-pointer text-left flex items-center justify-between p-2 pl-3 rounded-md text-lg font-bold tracking-wide transition-colors duration-150
                     ${
