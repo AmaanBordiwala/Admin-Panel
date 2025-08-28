@@ -9,4 +9,4 @@ services:
       - /app/node_modules        # keep node_modules only inside container
     ports:
       - "3000:3000"
-    command: sh -c "rm -rf node_modules package-lock.json && npm cache clean --force && npm install --legacy-peer-deps && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    command: sh -c "npm cache clean --force && npm install --legacy-peer-deps && npm run dev -- --hostname 0.0.0.0 --port 3000"
