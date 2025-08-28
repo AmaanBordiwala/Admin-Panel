@@ -5,8 +5,8 @@ services:
     image: node:18-alpine
     working_dir: /app
     volumes:
-      - ./:/app
-      - /app/node_modules        # keep node_modules only inside container
+      - ./:/app             # Mount project
+      - /app/node_modules   # Keep node_modules inside container (not on Windows)
     ports:
       - "3000:3000"
-    command: sh -c "npm cache clean --force && npm install --legacy-peer-deps && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    command: sh -c "npm install --legacy-peer-deps && npm run dev -- --hostname 0.0.0.0 --port 3000"
