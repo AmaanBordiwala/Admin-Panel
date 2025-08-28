@@ -1,11 +1,13 @@
 services:
   admin-panel:
     image: node:18-alpine
-    user: root   # run as root
+    user: node                # run as non-root (UID 1000 inside container)
     working_dir: /app
     volumes:
-      - ./:/app
-      - /app/node_modules
+      - ./:/app               # mount project files
+      - /app/node_modules     # keep node_modules inside container only
     ports:
       - "3000:3000"
-    command: sh -c "npm install --legacy-peer-deps && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    command: >
+      sh -c "npm install --legacy-peer-deps &&
+             npm run dev -- --hostname 0.0.0.0 --port 3000"
