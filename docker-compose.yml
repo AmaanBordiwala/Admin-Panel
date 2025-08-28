@@ -1,8 +1,7 @@
 services:
   admin-panel:
     image: node:18-alpine
-    user: node                # run as non-root (UID 1000 inside container)
-    working_dir: /app
+                
     volumes:
       - ./:/app               # mount project files
       - /app/node_modules     # keep node_modules inside container only
